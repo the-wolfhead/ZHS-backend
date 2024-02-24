@@ -3,6 +3,7 @@ const express = require('express');
 var pool  = require('./lib/db');
 const {getFavoriteDoctors, getFavoriteLaboratories} = require('./modules/favorites');
 const {getDoctors, updateDoctor, insertDoctor,} = require('./modules/doctors');
+const {getLabs, updateLab, insertLab,} = require('./modules/labs');
 // Create an Express application
 const app = express();
 const port = 3000;

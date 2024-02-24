@@ -1,6 +1,6 @@
 // Import necessary modules
 const express = require('express');
-var pool  = require('../lib/db');
+var pool  = require('./lib/db');
 
 // Create an Express application
 const app = express();

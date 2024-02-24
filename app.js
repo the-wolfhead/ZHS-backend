@@ -1,9 +1,10 @@
 // Import necessary modules
 const express = require('express');
-var pool  = require('./lib/db');
+const pool  = require('./lib/db');
 const {getFavoriteDoctors, getFavoriteLaboratories} = require('./modules/favorites');
 const {getDoctors, updateDoctor, insertDoctor,} = require('./modules/doctors');
 const {getLabs, updateLab, insertLab,} = require('./modules/labs');
+const {getLabTests, updateLabTest, insertLabTest,} = require('./modules/labtest')
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
 // Create an Express application
 const app = express();

@@ -49,6 +49,42 @@ app.get('/labs', async (req, res) => {
   }
 });
 
+// Route for handling signup POST requests
+app.post('/signup', async (req, res) => {
+  const { name, dateOfBirth, gender, contactInfo, address, password } = req.body;
+
+  // Validation (you can add more validation as needed)
+  if (!name || !dateOfBirth || !gender || !contactInfo || !address || !password) {
+    return res.status(400).json({ error: 'Please provide all required fields.' });
+  }
+
+  try {
+    // Check if user with the provided contact info already exists
+    const existingUserQuery = {
+      text: 'SELECT * FROM patient WHERE contact_info = $1',
+      values: [contactInfo],
+    };
+    const existingUserResult = await client.query(existingUserQuery);
+
+    if (existingUserResult.rows.length > 0) {
+      return res.status(400).json({ error: 'User with this contact info already exists.' });
+    }
+
+    // Insert new user into the Patient table
+    const insertQuery = {
+      text: 'INSERT INTO patient (name, date_of_birth, gender, contact_info, address, password) VALUES ($1, $2, $3, $4, $5, $6)',
+      values: [name, dateOfBirth, gender, contactInfo, address, password],
+    };
+    await client.query(insertQuery);
+
+    // Return success response
+    res.status(201).json({ message: 'User signed up successfully.' });
+  } catch (error) {
+    console.error('Error during signup:', error);
+    res.status(500).json({ error: 'An error occurred during signup.' });
+  }
+});
+
 // Start the Express server
 app.listen(port, hostname, () => {
   console.log(`Server is running on http://${hostname}:${port}`);

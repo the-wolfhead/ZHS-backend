@@ -85,6 +85,18 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+// Route for handling import request for getDoctors
+app.get('/getDoctors', async (req, res) => {
+  try {
+    // Call the getDoctors function to fetch doctors data
+    const doctors = await getDoctors();
+    res.json(doctors);
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+  }
+});
+
 // Start the Express server
 app.listen(port, hostname, () => {
   console.log(`Server is running on http://${hostname}:${port}`);

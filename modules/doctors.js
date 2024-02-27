@@ -1,9 +1,5 @@
 const pool  = require('../lib/db');
 
-
-// Connect to the PostgreSQL database
-pool.connect();
-
 // Function to fetch data from the Doctor table
 async function getDoctors() {
   try {

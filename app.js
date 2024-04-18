@@ -8,6 +8,7 @@ const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./mo
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
 const {getClinics, updateClinic, insertClinic, getAllClinics, } = require(',/modules/clinics');
+const { insertPharmacy, updatePharmacy, getPharmacyById,} = require('./modules/pharmacies');
 // Create an Express application
 const app = express();
 const port = 3000;
@@ -219,6 +220,90 @@ router.get('/patientsmedicals/:id', async (req, res) => {
     res.status(500).json({ error: `Failed to get patient with ID ${patientId}` });
   }
 });
+
+// Handler for inserting a new pharmacy
+router.post('/pharmacies', async (req, res) => {
+  const pharmacyData = req.body;
+  try {
+    const newPharmacy = await insertPharmacy(pharmacyData);
+    res.status(201).json(newPharmacy);
+  } catch (error) {
+    console.error('Error inserting new pharmacy:', error);
+    res.status(500).json({ error: 'Failed to insert new pharmacy' });
+  }
+});
+
+// Handler for updating a pharmacy by ID
+router.put('/pharmacies/:id', async (req, res) => {
+  const pharmacyId = req.params.id;
+  const updates = req.body;
+  try {
+    const updatedPharmacy = await updatePharmacy(pharmacyId, updates);
+    res.status(200).json(updatedPharmacy);
+  } catch (error) {
+    console.error(`Error updating pharmacy with ID ${pharmacyId}:`, error);
+    res.status(500).json({ error: `Failed to update pharmacy with ID ${pharmacyId}` });
+  }
+});
+
+// Handler for getting a pharmacy by ID
+router.get('/pharmacies/:id', async (req, res) => {
+  const pharmacyId = req.params.id;
+  try {
+    const pharmacy = await getPharmacyById(pharmacyId);
+    if (!pharmacy) {
+      res.status(404).json({ error: `Pharmacy with ID ${pharmacyId} not found` });
+    } else {
+      res.status(200).json(pharmacy);
+    }
+  } catch (error) {
+    console.error(`Error fetching pharmacy with ID ${pharmacyId}:`, error);
+    res.status(500).json({ error: `Failed to fetch pharmacy with ID ${pharmacyId}` });
+  }
+});
+
+// Handler for inserting lifestyle data for a patient
+router.post('/patients/:id/lifestyle', async (req, res) => {
+  const patientId = req.params.id;
+  const lifestyleData = req.body;
+  try {
+    const newLifestyle = await insertLifestyle(patientId, lifestyleData);
+    res.status(201).json(newLifestyle);
+  } catch (error) {
+    console.error('Error inserting lifestyle data:', error);
+    res.status(500).json({ error: 'Failed to insert lifestyle data' });
+  }
+});
+
+// Handler for updating lifestyle data for a patient
+router.put('/patients/:id/lifestyle', async (req, res) => {
+  const patientId = req.params.id;
+  const lifestyleData = req.body;
+  try {
+    const updatedLifestyle = await updateLifestyle(patientId, lifestyleData);
+    res.status(200).json(updatedLifestyle);
+  } catch (error) {
+    console.error('Error updating lifestyle data:', error);
+    res.status(500).json({ error: 'Failed to update lifestyle data' });
+  }
+});
+
+// Handler for getting lifestyle data by patient ID
+router.get('/patients/:id/lifestyle', async (req, res) => {
+  const patientId = req.params.id;
+  try {
+    const lifestyle = await getLifestyleByPatientId(patientId);
+    if (!lifestyle) {
+      res.status(404).json({ error: 'Lifestyle data not found for this patient' });
+    } else {
+      res.status(200).json(lifestyle);
+    }
+  } catch (error) {
+    console.error('Error fetching lifestyle data:', error);
+    res.status(500).json({ error: 'Failed to fetch lifestyle data' });
+  }
+});
+
 
 // Start the Express server
 app.listen(port, hostname, () => {

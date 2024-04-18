@@ -4,8 +4,10 @@ const pool  = require('./lib/db');
 const {getFavoriteDoctors, getFavoriteLaboratories} = require('./modules/favorites');
 const {getDoctors, updateDoctor, insertDoctor,} = require('./modules/doctors');
 const {getLabs, updateLab, insertLab,} = require('./modules/labs');
-const {getLabTests, updateLabTest, insertLabTest,} = require('./modules/labtest')
+const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./modules/lifestyle');
+const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
+const {getClinics, updateClinic, insertClinic, getAllClinics, } = require(',/modules/clinics');
 // Create an Express application
 const app = express();
 const port = 3000;
@@ -13,113 +15,211 @@ const hostname = '0.0.0.0';
 
 
 
-// Define the lab search endpoint
-app.get('/labs', async (req, res) => {
+
+
+const express = require('express');
+const router = express.Router();
+const { getDoctors, updateDoctor, insertDoctor } = require('../path/to/doctorModule');
+
+// Handler for getting all doctors
+router.get('/doctors', async (req, res) => {
   try {
-    const { name, location, test } = req.query;
-    let queryParams = [];
-    let conditions = [];
-    
-    if (name) {
-      conditions.push('lab_name ILIKE $' + (queryParams.length + 1));
-      queryParams.push(`%${name}%`);
-    }
-    if (location) {
-      conditions.push('location ILIKE $' + (queryParams.length + 1));
-      queryParams.push(`%${location}%`);
-    }
-    if (test) {
-      conditions.push('test_name ILIKE $' + (queryParams.length + 1));
-      queryParams.push(`%${test}%`);
-    }
-
-    const query = `
-      SELECT lab_id, lab_name, location, contact_info
-      FROM Lab
-      JOIN Lab_Test ON Lab.lab_id = Lab_Test.lab_id
-      JOIN Test ON Lab_Test.test_id = Test.test_id
-      ${conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : ''}
-    `;
-
-    const { rows } = await pool.query(query, queryParams);
-    res.json(rows);
-  } catch (error) {
-    console.error('Error executing query:', error);
-    res.status(500).json({ error: 'An internal server error occurred.' });
-  }
-});
-
-// Route for handling signup POST requests
-app.post('/signup', async (req, res) => {
-  const { name, dateOfBirth, gender, contactInfo, address, password } = req.body;
-
-  // Validation (you can add more validation as needed)
-  if (!name || !dateOfBirth || !gender || !contactInfo || !address || !password) {
-    return res.status(400).json({ error: 'Please provide all required fields.' });
-  }
-
-  try {
-    // Check if user with the provided contact info already exists
-    const existingUserQuery = {
-      text: 'SELECT * FROM patient WHERE contact_info = $1',
-      values: [contactInfo],
-    };
-    const existingUserResult = await client.query(existingUserQuery);
-
-    if (existingUserResult.rows.length > 0) {
-      return res.status(400).json({ error: 'User with this contact info already exists.' });
-    }
-
-    // Insert new user into the Patient table
-    const insertQuery = {
-      text: 'INSERT INTO patient (name, date_of_birth, gender, contact_info, address, password) VALUES ($1, $2, $3, $4, $5, $6)',
-      values: [name, dateOfBirth, gender, contactInfo, address, password],
-    };
-    await client.query(insertQuery);
-
-    // Return success response
-    res.status(201).json({ message: 'User signed up successfully.' });
-  } catch (error) {
-    console.error('Error during signup:', error);
-    res.status(500).json({ error: 'An error occurred during signup.' });
-  }
-});
-
-// Route for handling import request for getDoctors
-app.get('/getDoctors', async (req, res) => {
-  try {
-    // Call the getDoctors function to fetch doctors data
     const doctors = await getDoctors();
-    res.json(doctors);
+    res.status(200).json(doctors);
   } catch (error) {
-    console.error('Error fetching doctors:', error);
-    res.status(500).json({ error: 'An internal server error occurred.' });
+    console.error('Error getting doctors:', error);
+    res.status(500).json({ error: 'Failed to get doctors' });
   }
 });
 
-// Route for handling import request for getLabs
-app.get('/getLabs', async (req, res) => {
+// Handler for updating a doctor
+router.put('/doctors/:id', async (req, res) => {
+  const doctorId = req.params.id;
+  const updates = req.body;
   try {
-    // Call the getDoctors function to fetch doctors data
+    await updateDoctor(doctorId, updates);
+    res.status(200).json({ message: `Doctor with ID ${doctorId} updated successfully` });
+  } catch (error) {
+    console.error(`Error updating doctor with ID ${doctorId}:`, error);
+    res.status(500).json({ error: `Failed to update doctor with ID ${doctorId}` });
+  }
+});
+
+// Handler for inserting a new doctor
+router.post('/doctors', async (req, res) => {
+  const doctorData = req.body;
+  try {
+    await insertDoctor(doctorData);
+    res.status(201).json({ message: 'New doctor inserted successfully' });
+  } catch (error) {
+    console.error('Error inserting new doctor:', error);
+    res.status(500).json({ error: 'Failed to insert new doctor' });
+  }
+});
+
+
+// Handler for getting all labs
+router.get('/labs', async (req, res) => {
+  try {
     const labs = await getLabs();
-    res.json(labs);
+    res.status(200).json(labs);
   } catch (error) {
-    console.error('Error fetching labs:', error);
-    res.status(500).json({ error: 'An internal server error occurred.' });
+    console.error('Error getting labs:', error);
+    res.status(500).json({ error: 'Failed to get labs' });
   }
 });
 
-// Route for handling import request for getDoctors
-app.get('/getConsultations', async (req, res) => {
+// Handler for updating a lab
+router.put('/labs/:id', async (req, res) => {
+  const labId = req.params.id;
+  const updates = req.body;
   try {
-    // Call the getDoctors function to fetch doctors data
+    await updateLab(labId, updates);
+    res.status(200).json({ message: `Lab with ID ${labId} updated successfully` });
+  } catch (error) {
+    console.error(`Error updating lab with ID ${labId}:`, error);
+    res.status(500).json({ error: `Failed to update lab with ID ${labId}` });
+  }
+});
+
+// Handler for inserting a new lab
+router.post('/labs', async (req, res) => {
+  const labData = req.body;
+  try {
+    await insertLab(labData);
+    res.status(201).json({ message: 'New lab inserted successfully' });
+  } catch (error) {
+    console.error('Error inserting new lab:', error);
+    res.status(500).json({ error: 'Failed to insert new lab' });
+  }
+});
+
+// Handler for inserting a new consultation
+router.post('/consultations', async (req, res) => {
+  const consultationData = req.body;
+  try {
+    await insertConsultation(consultationData);
+    res.status(201).json({ message: 'New consultation inserted successfully' });
+  } catch (error) {
+    console.error('Error inserting new consultation:', error);
+    res.status(500).json({ error: 'Failed to insert new consultation' });
+  }
+});
+
+// Handler for updating a consultation by ID
+router.put('/consultations/:id', async (req, res) => {
+  const consultationId = req.params.id;
+  const updates = req.body;
+  try {
+    await updateConsultation(consultationId, updates);
+    res.status(200).json({ message: `Consultation with ID ${consultationId} updated successfully` });
+  } catch (error) {
+    console.error(`Error updating consultation with ID ${consultationId}:`, error);
+    res.status(500).json({ error: `Failed to update consultation with ID ${consultationId}` });
+  }
+});
+
+// Handler for getting all consultations
+router.get('/consultations', async (req, res) => {
+  try {
     const consultations = await getConsultations();
-    res.json(consultations);
+    res.status(200).json(consultations);
   } catch (error) {
     console.error('Error fetching consultations:', error);
-    res.status(500).json({ error: 'An internal server error occurred.' });
+    res.status(500).json({ error: 'Failed to fetch consultations' });
   }
 });
+
+
+// Handler for inserting a new clinic
+router.post('/clinics', async (req, res) => {
+  const { name, location, bio, rating, clinicType } = req.body;
+  try {
+    const newClinic = await insertClinic(name, location, bio, rating, clinicType);
+    res.status(201).json(newClinic);
+  } catch (error) {
+    console.error('Error inserting clinic:', error);
+    res.status(500).json({ error: 'Failed to insert clinic' });
+  }
+});
+
+// Handler for updating an existing clinic
+router.put('/clinics/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, location, bio, rating, clinicType } = req.body;
+  try {
+    const updatedClinic = await updateClinic(id, name, location, bio, rating, clinicType);
+    res.status(200).json(updatedClinic);
+  } catch (error) {
+    console.error('Error updating clinic:', error);
+    res.status(500).json({ error: 'Failed to update clinic' });
+  }
+});
+
+// Handler for getting all clinics
+router.get('/clinics', async (req, res) => {
+  try {
+    const clinics = await getAllClinics();
+    res.status(200).json(clinics);
+  } catch (error) {
+    console.error('Error getting clinics:', error);
+    res.status(500).json({ error: 'Failed to get clinics' });
+  }
+});
+
+// Handler for getting clinics with optional filters
+router.get('/clinics/search', async (req, res) => {
+  const filters = req.query;
+  try {
+    const filteredClinics = await getClinics(filters);
+    res.status(200).json(filteredClinics);
+  } catch (error) {
+    console.error('Error getting filtered clinics:', error);
+    res.status(500).json({ error: 'Failed to get filtered clinics' });
+  }
+});
+
+// Handler for inserting a new patient
+router.post('/patientsmedicals', async (req, res) => {
+  const patientData = req.body;
+  try {
+    const patient = await insertPatient(patientData);
+    res.status(201).json(patient);
+  } catch (error) {
+    console.error('Error inserting new patient:', error);
+    res.status(500).json({ error: 'Failed to insert new patient' });
+  }
+});
+
+// Handler for updating a patient by ID
+router.put('/patientsmedicals/:id', async (req, res) => {
+  const patientId = req.params.id;
+  const patientData = req.body;
+  try {
+    const updatedPatient = await updatePatient(patientId, patientData);
+    res.status(200).json(updatedPatient);
+  } catch (error) {
+    console.error(`Error updating patient with ID ${patientId}:`, error);
+    res.status(500).json({ error: `Failed to update patient with ID ${patientId}` });
+  }
+});
+
+// Handler for getting a patient by ID
+router.get('/patientsmedicals/:id', async (req, res) => {
+  const patientId = req.params.id;
+  try {
+    const patient = await getPatientById(patientId);
+    if (!patient) {
+      res.status(404).json({ error: `Patient with ID ${patientId} not found` });
+    } else {
+      res.status(200).json(patient);
+    }
+  } catch (error) {
+    console.error(`Error getting patient with ID ${patientId}:`, error);
+    res.status(500).json({ error: `Failed to get patient with ID ${patientId}` });
+  }
+});
+
 // Start the Express server
 app.listen(port, hostname, () => {
   console.log(`Server is running on http://${hostname}:${port}`);

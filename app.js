@@ -7,7 +7,7 @@ const {getLabs, updateLab, insertLab,} = require('./modules/labs');
 const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./modules/lifestyle');
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
-const {getClinics, updateClinic, insertClinic, getAllClinics, } = require(',/modules/clinics');
+const {getClinics, updateClinic, insertClinic, getAllClinics, } = require('./modules/clinics');
 const { insertPharmacy, updatePharmacy, getPharmacyById,} = require('./modules/pharmacies');
 // Create an Express application
 const app = express();

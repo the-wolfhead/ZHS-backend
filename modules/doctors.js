@@ -25,7 +25,7 @@ async function getDoctorById(doctorId) {
 
 async function getDoctors() {
   try {
-    const result = await client.query('SELECT * FROM Doctor');
+    const result = await pool.query('SELECT * FROM Doctor');
     return result.rows;
   } catch (error) {
     console.error('Error fetching doctors:', error);

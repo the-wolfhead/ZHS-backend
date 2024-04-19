@@ -18,9 +18,7 @@ const hostname = '0.0.0.0';
 
 
 
-const express = require('express');
 const router = express.Router();
-const { getDoctors, updateDoctor, insertDoctor } = require('../path/to/doctorModule');
 
 // Handler for getting all doctors
 router.get('/doctors', async (req, res) => {

@@ -1,10 +1,7 @@
 const pool  = require('../lib/db');// Database connection
 // Function to insert a new clinic into the table
 async function insertClinic(name, location, bio, rating, clinicType) {
-    const query = ` INSERT INTO clinics (name, location, bio, rating, clinic_type)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *;
-    `;
+    const query = `INSERT INTO clinics (name, location, bio, rating, clinic_type)VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
     const values = [name, location, bio, rating, clinicType];
   
     try {

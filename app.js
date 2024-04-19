@@ -2,7 +2,7 @@
 const express = require('express');
 const pool  = require('./lib/db');
 const {getFavoriteDoctors, getFavoriteLaboratories} = require('./modules/favorites');
-const {getDoctors, updateDoctor, insertDoctor,} = require('./modules/doctors');
+const {getDoctors, updateDoctor, insertDoctor, getDoctorById} = require('./modules/doctors');
 const {getLabs, updateLab, insertLab,} = require('./modules/labs');
 const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./modules/lifestyle');
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');

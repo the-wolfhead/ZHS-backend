@@ -23,8 +23,19 @@ async function getDoctorById(doctorId) {
   return rows[0];
 }
 
+async function getDoctors() {
+  try {
+    const result = await client.query('SELECT * FROM Doctor');
+    return result.rows;
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    return [];
+  }
+}
+
 module.exports = {
   insertDoctor,
   updateDoctor,
   getDoctorById,
+  getDoctors,
 };

@@ -15,13 +15,8 @@ const port = 3000;
 const hostname = '0.0.0.0';
 
 
-
-
-
-const router = express.Router();
-
 // Handler for getting all doctors
-router.get('/doctors', async (req, res) => {
+app.get('/doctors', async (req, res) => {
   try {
     const doctors = await getDoctors();
     res.status(200).json(doctors);
@@ -32,7 +27,7 @@ router.get('/doctors', async (req, res) => {
 });
 
 // Handler for updating a doctor
-router.put('/doctors/:id', async (req, res) => {
+app.put('/doctors/:id', async (req, res) => {
   const doctorId = req.params.id;
   const updates = req.body;
   try {
@@ -45,7 +40,7 @@ router.put('/doctors/:id', async (req, res) => {
 });
 
 // Handler for inserting a new doctor
-router.post('/doctors', async (req, res) => {
+app.post('/doctors', async (req, res) => {
   const doctorData = req.body;
   try {
     await insertDoctor(doctorData);
@@ -58,7 +53,7 @@ router.post('/doctors', async (req, res) => {
 
 
 // Handler for getting all labs
-router.get('/labs', async (req, res) => {
+app.get('/labs', async (req, res) => {
   try {
     const labs = await getLabs();
     res.status(200).json(labs);
@@ -69,7 +64,7 @@ router.get('/labs', async (req, res) => {
 });
 
 // Handler for updating a lab
-router.put('/labs/:id', async (req, res) => {
+app.put('/labs/:id', async (req, res) => {
   const labId = req.params.id;
   const updates = req.body;
   try {
@@ -82,7 +77,7 @@ router.put('/labs/:id', async (req, res) => {
 });
 
 // Handler for inserting a new lab
-router.post('/labs', async (req, res) => {
+app.post('/labs', async (req, res) => {
   const labData = req.body;
   try {
     await insertLab(labData);
@@ -94,7 +89,7 @@ router.post('/labs', async (req, res) => {
 });
 
 // Handler for inserting a new consultation
-router.post('/consultations', async (req, res) => {
+app.post('/consultations', async (req, res) => {
   const consultationData = req.body;
   try {
     await insertConsultation(consultationData);
@@ -106,7 +101,7 @@ router.post('/consultations', async (req, res) => {
 });
 
 // Handler for updating a consultation by ID
-router.put('/consultations/:id', async (req, res) => {
+app.put('/consultations/:id', async (req, res) => {
   const consultationId = req.params.id;
   const updates = req.body;
   try {
@@ -119,7 +114,7 @@ router.put('/consultations/:id', async (req, res) => {
 });
 
 // Handler for getting all consultations
-router.get('/consultations', async (req, res) => {
+app.get('/consultations', async (req, res) => {
   try {
     const consultations = await getConsultations();
     res.status(200).json(consultations);
@@ -131,7 +126,7 @@ router.get('/consultations', async (req, res) => {
 
 
 // Handler for inserting a new clinic
-router.post('/clinics', async (req, res) => {
+app.post('/clinics', async (req, res) => {
   const { name, location, bio, rating, clinicType } = req.body;
   try {
     const newClinic = await insertClinic(name, location, bio, rating, clinicType);
@@ -143,7 +138,7 @@ router.post('/clinics', async (req, res) => {
 });
 
 // Handler for updating an existing clinic
-router.put('/clinics/:id', async (req, res) => {
+app.put('/clinics/:id', async (req, res) => {
   const { id } = req.params;
   const { name, location, bio, rating, clinicType } = req.body;
   try {
@@ -156,7 +151,7 @@ router.put('/clinics/:id', async (req, res) => {
 });
 
 // Handler for getting all clinics
-router.get('/clinics', async (req, res) => {
+app.get('/clinics', async (req, res) => {
   try {
     const clinics = await getAllClinics();
     res.status(200).json(clinics);
@@ -167,7 +162,7 @@ router.get('/clinics', async (req, res) => {
 });
 
 // Handler for getting clinics with optional filters
-router.get('/clinics/search', async (req, res) => {
+app.get('/clinics/search', async (req, res) => {
   const filters = req.query;
   try {
     const filteredClinics = await getClinics(filters);
@@ -179,7 +174,7 @@ router.get('/clinics/search', async (req, res) => {
 });
 
 // Handler for inserting a new patient
-router.post('/patientsmedicals', async (req, res) => {
+app.post('/patientsmedicals', async (req, res) => {
   const patientData = req.body;
   try {
     const patient = await insertPatient(patientData);
@@ -191,7 +186,7 @@ router.post('/patientsmedicals', async (req, res) => {
 });
 
 // Handler for updating a patient by ID
-router.put('/patientsmedicals/:id', async (req, res) => {
+app.put('/patientsmedicals/:id', async (req, res) => {
   const patientId = req.params.id;
   const patientData = req.body;
   try {
@@ -204,7 +199,7 @@ router.put('/patientsmedicals/:id', async (req, res) => {
 });
 
 // Handler for getting a patient by ID
-router.get('/patientsmedicals/:id', async (req, res) => {
+app.get('/patientsmedicals/:id', async (req, res) => {
   const patientId = req.params.id;
   try {
     const patient = await getPatientById(patientId);
@@ -220,7 +215,7 @@ router.get('/patientsmedicals/:id', async (req, res) => {
 });
 
 // Handler for inserting a new pharmacy
-router.post('/pharmacies', async (req, res) => {
+app.post('/pharmacies', async (req, res) => {
   const pharmacyData = req.body;
   try {
     const newPharmacy = await insertPharmacy(pharmacyData);
@@ -232,7 +227,7 @@ router.post('/pharmacies', async (req, res) => {
 });
 
 // Handler for updating a pharmacy by ID
-router.put('/pharmacies/:id', async (req, res) => {
+app.put('/pharmacies/:id', async (req, res) => {
   const pharmacyId = req.params.id;
   const updates = req.body;
   try {
@@ -245,7 +240,7 @@ router.put('/pharmacies/:id', async (req, res) => {
 });
 
 // Handler for getting a pharmacy by ID
-router.get('/pharmacies/:id', async (req, res) => {
+app.get('/pharmacies/:id', async (req, res) => {
   const pharmacyId = req.params.id;
   try {
     const pharmacy = await getPharmacyById(pharmacyId);
@@ -261,7 +256,7 @@ router.get('/pharmacies/:id', async (req, res) => {
 });
 
 // Handler for inserting lifestyle data for a patient
-router.post('/patients/:id/lifestyle', async (req, res) => {
+app.post('/patients/:id/lifestyle', async (req, res) => {
   const patientId = req.params.id;
   const lifestyleData = req.body;
   try {
@@ -274,7 +269,7 @@ router.post('/patients/:id/lifestyle', async (req, res) => {
 });
 
 // Handler for updating lifestyle data for a patient
-router.put('/patients/:id/lifestyle', async (req, res) => {
+app.put('/patients/:id/lifestyle', async (req, res) => {
   const patientId = req.params.id;
   const lifestyleData = req.body;
   try {
@@ -287,7 +282,7 @@ router.put('/patients/:id/lifestyle', async (req, res) => {
 });
 
 // Handler for getting lifestyle data by patient ID
-router.get('/patients/:id/lifestyle', async (req, res) => {
+app.get('/patients/:id/lifestyle', async (req, res) => {
   const patientId = req.params.id;
   try {
     const lifestyle = await getLifestyleByPatientId(patientId);

@@ -4,6 +4,7 @@ const pool  = require('./lib/db');
 const {getFavoriteDoctors, getFavoriteLaboratories} = require('./modules/favorites');
 const {getDoctors, updateDoctor, insertDoctor, getDoctorById} = require('./modules/doctors');
 const {getLabs, updateLab, insertLab,} = require('./modules/labs');
+const {getUsers, updateUser, insertUser,} = require('./modules/user');
 const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./modules/lifestyle');
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
@@ -50,6 +51,44 @@ app.post('/doctors', async (req, res) => {
     res.status(500).json({ error: 'Failed to insert new doctor' });
   }
 });
+
+
+// Route handler for getting all users
+app.get('/users', async (req, res) => {
+  try {
+    const users = await getUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error getting users:', error);
+    res.status(500).json({ error: 'Failed to get users' });
+  }
+});
+
+// Handler for updating a user
+app.put('/users/:id', async (req, res) => {
+  const userId = req.params.id;
+  const updates = req.body;
+  try {
+    await updateUser(userId, updates);
+    res.status(200).json({ message: `User with ID ${userId} updated successfully` });
+  } catch (error) {
+    console.error(`Error updating user with ID ${userId}:`, error);
+    res.status(500).json({ error: `Failed to update user with ID ${userId}` });
+  }
+});
+
+// Handler for inserting a new user
+app.post('/users', async (req, res) => {
+  const userData = req.body;
+  try {
+    await insertUser(userData);
+    res.status(201).json({ message: 'New user inserted successfully' });
+  } catch (error) {
+    console.error('Error inserting new user:', error);
+    res.status(500).json({ error: 'Failed to insert new user' });
+  }
+});
+
 
 
 // Handler for getting all labs

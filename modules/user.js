@@ -16,7 +16,7 @@ async function insertUser(userData) {
   } = userData;
 
   const queryText = `
-    INSERT INTO "user" (first_name, last_name, age, date_of_birth, email, password, phone, allergies, disabilities, lifestyle_choices) 
+    INSERT INTO "user_data" (first_name, last_name, age, date_of_birth, email, password, phone, allergies, disabilities, lifestyle_choices) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
     RETURNING *;
   `;
@@ -54,7 +54,7 @@ async function updateUser(userId, userData) {
   } = userData;
 
   const queryText = `
-    UPDATE "user" 
+    UPDATE "user_data" 
     SET 
       first_name = $1,
       last_name = $2,
@@ -90,7 +90,7 @@ async function updateUser(userId, userData) {
 
 // Function to get a user by ID
 async function getUserById(userId) {
-  const queryText = 'SELECT * FROM "user" WHERE user_id = $1';
+  const queryText = 'SELECT * FROM "user_data" WHERE user_id = $1';
   const { rows } = await pool.query(queryText, [userId]);
   return rows[0];
 }
@@ -98,7 +98,7 @@ async function getUserById(userId) {
 // Function to get all users
 async function getUsers() {
   try {
-    const result = await pool.query('SELECT * FROM "user"');
+    const result = await pool.query('SELECT * FROM "user_data"');
     return result.rows;
   } catch (error) {
     console.error('Error fetching users:', error);

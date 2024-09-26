@@ -91,6 +91,8 @@ app.post('/users', async (req, res) => {
 
 // Route handler for getting a user by email and password
 app.post('/users/login', async (req, res) => {
+  console.log('Request Body:', req.body); // Log the request body
+
   const { email, password } = req.body;
 
   try {

@@ -15,6 +15,9 @@ const app = express();
 const port = 3000;
 const hostname = '0.0.0.0';
 
+app.use(express.json());
+
+
 
 // Handler for getting all doctors
 app.get('/doctors', async (req, res) => {

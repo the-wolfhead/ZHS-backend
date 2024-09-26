@@ -4,7 +4,7 @@ const pool  = require('./lib/db');
 const {getFavoriteDoctors, getFavoriteLaboratories} = require('./modules/favorites');
 const {getDoctors, updateDoctor, insertDoctor, getDoctorById} = require('./modules/doctors');
 const {getLabs, updateLab, insertLab,} = require('./modules/labs');
-const {getUsers, updateUser, insertUser,} = require('./modules/user');
+const {getUsers, updateUser, insertUser, getUserByEmailAndPassword} = require('./modules/user');
 const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./modules/lifestyle');
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
@@ -88,6 +88,35 @@ app.post('/users', async (req, res) => {
     res.status(500).json({ error: 'Failed to insert new user' });
   }
 });
+
+// Route handler for getting a user by email and password
+app.post('/users/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if both email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    // Get the user by email and password
+    const user = await getUserByEmailAndPassword(email, password);
+
+    // If successful, send back the user data (without password)
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error logging in user:', error);
+
+    // Send appropriate error messages based on the error thrown
+    if (error.message === 'User not found' || error.message === 'Invalid password') {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // For other errors, send a 500 Internal Server Error
+    res.status(500).json({ error: 'Failed to log in user' });
+  }
+});
+
 
 
 

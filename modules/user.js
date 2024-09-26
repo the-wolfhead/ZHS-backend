@@ -1,5 +1,4 @@
 const pool = require('../lib/db');
-const bcrypt = require('bcrypt');
 
 // Function to insert a new user (hashes the password before storing)
 async function insertUser(userData) {
@@ -17,7 +16,6 @@ async function insertUser(userData) {
   } = userData;
 
   // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   const queryText = `
     INSERT INTO "user_data" (first_name, last_name, age, date_of_birth, email, password, phone, allergies, disabilities, lifestyle_choices) 
@@ -58,7 +56,6 @@ async function updateUser(userId, userData) {
   } = userData;
 
   // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   const queryText = `
     UPDATE "user_data" 
@@ -115,19 +112,19 @@ async function getUsers() {
 
 // Function to get user by email and verify password
 async function getUserByEmailAndPassword(email, password) {
+  // Query to fetch the user by email
   const queryText = 'SELECT * FROM "user_data" WHERE email = $1';
   const { rows } = await pool.query(queryText, [email]);
 
+  // If no user is found, throw an error
   if (rows.length === 0) {
     throw new Error('User not found');
   }
 
   const user = rows[0];
 
-  // Compare the hashed password with the one provided
-  const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-  if (!isPasswordMatch) {
+  // Directly compare the provided password with the stored password (no bcrypt)
+  if (password !== user.password) {
     throw new Error('Invalid password');
   }
 
@@ -135,6 +132,7 @@ async function getUserByEmailAndPassword(email, password) {
   const { password: _, ...userWithoutPassword } = user;
   return userWithoutPassword;
 }
+
 
 module.exports = {
   insertUser,

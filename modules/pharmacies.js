@@ -37,4 +37,5 @@ async function insertPharmacy(pharmacyData) {
     insertPharmacy,
     updatePharmacy,
     getPharmacyById,
+    getPharmacies,
   };

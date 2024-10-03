@@ -9,7 +9,7 @@ const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./mo
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
 const {getClinics, updateClinic, insertClinic, getAllClinics, } = require('./modules/clinics');
-const { insertPharmacy, updatePharmacy, getPharmacyById,} = require('./modules/pharmacies');
+const { insertPharmacy, updatePharmacy, getPharmacyById, getPharmacies} = require('./modules/pharmacies');
 // Create an Express application
 const app = express();
 const port = 3000;
@@ -284,6 +284,17 @@ app.get('/patientsmedicals/:id', async (req, res) => {
   } catch (error) {
     console.error(`Error getting patient with ID ${patientId}:`, error);
     res.status(500).json({ error: `Failed to get patient with ID ${patientId}` });
+  }
+});
+
+// Handler for getting all labs
+app.get('/pharmacies', async (req, res) => {
+  try {
+    const labs = await getPharmacies();
+    res.status(200).json(labs);
+  } catch (error) {
+    console.error('Error getting Pharmacies:', error);
+    res.status(500).json({ error: 'Failed to get pharmacies' });
   }
 });
 

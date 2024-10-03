@@ -8,7 +8,7 @@ const {getUsers, updateUser, insertUser, getUserByEmailAndPassword} = require('.
 const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./modules/lifestyle');
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
-const {getClinics, updateClinic, insertClinic, getAllClinics, } = require('./modules/clinics');
+const {getClinics, updateClinic, insertClinic, getAllClinics, getClinicById } = require('./modules/clinics');
 const { insertPharmacy, updatePharmacy, getPharmacyById, getPharmacies} = require('./modules/pharmacies');
 // Create an Express application
 const app = express();
@@ -231,6 +231,21 @@ app.get('/clinics', async (req, res) => {
   } catch (error) {
     console.error('Error getting clinics:', error);
     res.status(500).json({ error: 'Failed to get clinics' });
+  }
+});
+
+app.get('/clinics/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const clinic = await getClinicById(id);
+    if (clinic) {
+      res.json(clinic);
+    } else {
+      res.status(404).json({ message: 'Clinic not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

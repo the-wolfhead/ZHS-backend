@@ -87,6 +87,7 @@ async function getLabById(id) {
 
 module.exports = {
   getLabs,
+  getLabById,
   updateLab,
   insertLab,
 };

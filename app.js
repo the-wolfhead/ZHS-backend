@@ -3,7 +3,7 @@ const express = require('express');
 const pool  = require('./lib/db');
 const {getFavoriteDoctors, getFavoriteLaboratories} = require('./modules/favorites');
 const {getDoctors, updateDoctor, insertDoctor, getDoctorById} = require('./modules/doctors');
-const {getLabs, updateLab, insertLab,} = require('./modules/labs');
+const {getLabs, updateLab, insertLab, getLabById} = require('./modules/labs');
 const {getUsers, updateUser, insertUser, getUserByEmailAndPassword} = require('./modules/user');
 const { insertLifestyle,updateLifestyle,getLifestyleByPatientId,}= require('./modules/lifestyle');
 const { insertPatient, updatePatient, getPatientById,} = require ('./modules/medical_history');
@@ -158,6 +158,21 @@ app.post('/labs', async (req, res) => {
   } catch (error) {
     console.error('Error inserting new lab:', error);
     res.status(500).json({ error: 'Failed to insert new lab' });
+  }
+});
+
+app.get('/labs/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const clinic = await getLabById(id);
+    if (clinic) {
+      res.json(clinic);
+    } else {
+      res.status(404).json({ message: 'Clinic not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

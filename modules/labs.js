@@ -37,6 +37,54 @@ async function insertLab(labData) {
   }
 }
 
+// Function to get labs from the table with optional filters
+async function getlabs(filters = {}) {
+  let query = 'SELECT * FROM labs';
+  const values = [];
+  const whereClauses = [];
+
+  // Construct WHERE clauses based on filter parameters
+  if (filters.name) {
+    whereClauses.push('name = $' + (values.push(filters.name)));
+  }
+  if (filters.location) {
+    whereClauses.push('location = $' + (values.push(filters.location)));
+  }
+  if (filters.clinicType) {
+    whereClauses.push('clinic_type = $' + (values.push(filters.clinicType)));
+  }
+
+  // Append WHERE clauses to the query if any filters were provided
+  if (whereClauses.length > 0) {
+    query += ' WHERE ' + whereClauses.join(' AND ');
+  }
+
+  try {
+    const result = await pool.query(query, values);
+    return result.rows;
+  } catch (error) {
+    console.error('Error getting labs:', error);
+    throw error;
+  }
+}
+
+// Function to get a clinic by ID
+async function getLabById(id) {
+  const query = `
+    SELECT * FROM labs
+    WHERE id = $1;
+  `;
+  const values = [id];
+
+  try {
+    const result = await pool.query(query, values);
+    return result.rows[0]; // Return the clinic data or null if not found
+  } catch (error) {
+    console.error('Error getting clinic by ID:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   getLabs,
   updateLab,

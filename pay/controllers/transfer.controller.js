@@ -1,4 +1,4 @@
-import { transferFunds } from '../services/transfer.service.js';
+const { transferFunds } from '../services/transfer.service.js';
 
 export const transfer = async (req, res, next) => {
   try {

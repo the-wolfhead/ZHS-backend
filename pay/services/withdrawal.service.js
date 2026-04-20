@@ -1,9 +1,9 @@
 // src/services/withdrawal.service.js
 
-import { prisma } from "../config/prisma.js";
-import { createDoubleEntry } from "./doubleLedger.service.js";
-import { getAccountBalance } from "./balance.service.js";
-import { sendPayout } from "./payout.service.js";
+const { prisma } = require "../config/prisma.js";
+const { createDoubleEntry } = require "./doubleLedger.service.js";
+const { getAccountBalance } = require "./balance.service.js";
+const { sendPayout } = require "./payout.service.js";
 
 export const withdrawFunds = async ({
   userId,

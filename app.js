@@ -10,6 +10,10 @@ const { insertPatient, updatePatient, getPatientById,} = require ('./modules/med
 const {getConsultations, updateConsultation, insertConsultation,} = require('./modules/consultations');
 const {getClinics, updateClinic, insertClinic, getAllClinics, getClinicById } = require('./modules/clinics');
 const { insertPharmacy, updatePharmacy, getPharmacyById, getPharmacies} = require('./modules/pharmacies');
+const transferRoutes = require('./pay/routes/transfer.routes.js');
+const withdrawalRoutes = require('./pay/routes/withdrawal.routes.js');
+const escrowRoutes = require('./pay/routes/escrow.routes.js');
+
 // Create an Express application
 const app = express();
 const port = 3000;
@@ -17,7 +21,9 @@ const hostname = '0.0.0.0';
 
 app.use(express.json());
 
-
+app.use('/api/transfer', transferRoutes);
+app.use('/api/withdraw', withdrawalRoutes);
+app.use('/api/escrow', escrowRoutes);
 
 // Handler for getting all doctors
 app.get('/doctors', async (req, res) => {
@@ -122,9 +128,6 @@ app.post('/users/login', async (req, res) => {
   }
 });
 
-
-
-
 // Handler for getting all labs
 app.get('/labs', async (req, res) => {
   try {
@@ -211,7 +214,6 @@ app.get('/consultations', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch consultations' });
   }
 });
-
 
 // Handler for inserting a new clinic
 app.post('/clinics', async (req, res) => {
@@ -410,7 +412,6 @@ app.get('/patients/:id/lifestyle', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch lifestyle data' });
   }
 });
-
 
 // Start the Express server
 app.listen(port, hostname, () => {

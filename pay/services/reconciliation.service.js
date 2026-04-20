@@ -1,5 +1,5 @@
 
-import { prisma } from '../config/prisma.js';
+const { prisma } = require '../config/prisma.js';
 
 export const reconcile = async (externalTxns) => {
   for (const txn of externalTxns) {

@@ -1,5 +1,5 @@
 const { prisma }= require '../config/prisma.js';
-import { getAccountBalance } from '../services/balance.service.js';
+const { getAccountBalance } from '../services/balance.service.js';
 
 export const getBalance = async (req, res, next) => {
   try {

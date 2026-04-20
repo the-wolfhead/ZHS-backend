@@ -1,4 +1,4 @@
-import { prisma } from '../config/prisma.js';
+const { prisma } from '../config/prisma.js';
 
 export const getAccountBalance = async (accountId) => {
   const credit = await prisma.ledgerEntry.aggregate({ where: { accountId, entryType: 'CREDIT' }, _sum: { amount: true } });

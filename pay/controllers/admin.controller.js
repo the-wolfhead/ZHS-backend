@@ -1,4 +1,4 @@
-import { prisma } from '../config/prisma.js';
+const { prisma }= require '../config/prisma.js';
 
 export const getReconciliationLogs = async (req, res, next) => {
   try {

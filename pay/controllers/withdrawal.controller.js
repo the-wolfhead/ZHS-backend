@@ -1,6 +1,6 @@
 // src/controllers/withdrawal.controller.js
 
-import { withdrawFunds } from "../services/withdrawal.service.js";
+const { withdrawFunds } =require "../services/withdrawal.service.js";
 
 export const withdraw = async (req, res, next) => {
   try {

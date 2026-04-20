@@ -1,7 +1,7 @@
 // src/services/transfer.service.js
 
-import { FEES } from "../config/fees.js";
-import { createMultiEntry } from "./doubleLedger.service.js";
+const { FEES } = require "../config/fees.js";
+const { createMultiEntry } = require "./doubleLedger.service.js";
 
 export const transferFunds = async ({ senderId, receiverId, amount }) => {
   const sender = await prisma.account.findFirst({ where: { userId: senderId } });

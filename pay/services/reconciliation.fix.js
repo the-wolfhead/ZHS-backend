@@ -1,7 +1,7 @@
 // src/services/reconciliation.fix.js
 
-import { prisma } from "../config/prisma.js";
-import { createDoubleEntry } from "./doubleLedger.service.js";
+const { prisma } = require "../config/prisma.js";
+const { createDoubleEntry } = require "./doubleLedger.service.js";
 
 export const fixMissingTransaction = async (txn) => {
   const walletAccount = await prisma.account.findFirst({

@@ -1,5 +1,5 @@
-import { verifyPalmPaySignature } from '../utils/verifySignature.js';
-import { paymentQueue } from '../jobs/queue.js';
+const { verifyPalmPaySignature } =require '../utils/verifySignature.js';
+const { paymentQueue } =require '../jobs/queue.js';
 
 export const palmpayWebhook = async (req, res) => {
   if (!verifyPalmPaySignature(req)) {

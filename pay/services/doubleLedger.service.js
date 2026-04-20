@@ -1,4 +1,4 @@
-import { prisma } from '../config/prisma.js';
+const { prisma } = require '../config/prisma.js';
 
 export const createDoubleEntry = async ({ debitAccountId, creditAccountId, amount, reference, narration }) => {
   return prisma.$transaction(async (tx) => {

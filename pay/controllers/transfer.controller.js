@@ -1,4 +1,4 @@
-const { transferFunds } = require '../services/transfer.service.js';
+const { transferFunds } = require '../services/transfer.service';
 
 export const transfer = async (req, res, next) => {
   try {

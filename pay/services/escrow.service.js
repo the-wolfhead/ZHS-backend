@@ -1,8 +1,8 @@
 // src/services/escrow.service.js
 
-import { prisma } from "../config/prisma.js";
-import { createDoubleEntry } from "./doubleLedger.service.js";
-import { getAccountBalance } from "./balance.service.js";
+const { prisma } from "../config/prisma.js";
+const { createDoubleEntry } from "./doubleLedger.service.js";
+const { getAccountBalance } from "./balance.service.js";
 
 export const createEscrow = async ({ buyerId, sellerId, amount }) => {
   const buyer = await prisma.account.findFirst({ where: { userId: buyerId } });

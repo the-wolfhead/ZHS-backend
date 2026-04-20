@@ -1,10 +1,10 @@
 // src/controllers/escrow.controller.js
 
-import {
+const {
   createEscrow,
   releaseEscrow,
   cancelEscrow,
-} from "../services/escrow.service.js";
+} = require "../services/escrow.service.js";
 
 export const create = async (req, res, next) => {
   try {

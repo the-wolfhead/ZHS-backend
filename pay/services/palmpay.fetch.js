@@ -1,6 +1,6 @@
-import axios from "axios";
-import crypto from "crypto";               // Built-in Node.js module
-import { RsaUtil } from "../config/rsaUtil.js";   // Path to the RsaUtil we created earlier
+const axios from "axios";
+const crypto from "crypto";               // Built-in Node.js module
+const { RsaUtil } from "../config/rsaUtil.js";   // Path to the RsaUtil we created earlier
 
 // Your secure keys from .env (never commit these!)
 const MERCHANT_PRIVATE_KEY = process.env.PALMPAY_MERCHANT_PRIVATE_KEY; // Base64 private key (backend)
